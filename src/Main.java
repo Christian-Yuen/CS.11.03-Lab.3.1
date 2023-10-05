@@ -3,6 +3,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.lang.Math;
 public class Main {
+    private static String playername;
     private static boolean win = false;
     private static boolean ruby = false;
     private static boolean genocide = false;
@@ -32,10 +33,10 @@ public class Main {
         TimeUnit.SECONDS.sleep(1);
         System.out.println("Brave Knight, it is your job to retrieve the princess.");
         TimeUnit.SECONDS.sleep(1);
-        Scanner pname = new Scanner(System.in);
+        Scanner playername = new Scanner(System.in);
         System.out.println("What is our brave knight called?");
         TimeUnit.SECONDS.sleep(1);
-        name = pname.nextLine();
+        name = playername.nextLine();
         System.out.println("We entrust our princess's saftey to you, Sir " + name);
         TimeUnit.SECONDS.sleep(1);
         Scanner weaponchoice = new Scanner(System.in);
@@ -47,10 +48,8 @@ public class Main {
         TimeUnit.SECONDS.sleep(1);
         System.out.println("Moving out of the city, you end up at a bar in a nearby village." +
                 "\n there, a drunken man challenges you to a battle");
-        boolean win = battle(30, 20, 20, 80, 60);
-        if (win == false) {
-            System.exit(0);
-        }
+        win = battle(30, 20, 20, 80, 60);
+        lost(win);
         reset();
         Scanner scanner = new Scanner(System.in);
         System.out.println("You stare at the drunken knight on the floor. Do you want to finish the job?");
@@ -81,10 +80,7 @@ public class Main {
             System.out.println("'You've killed someone innocent, haven't you");
             TimeUnit.SECONDS.sleep(1);
             win = battle(10, 35, 40, 90, 55);
-            if (win == false) {
-                System.out.println("Dirty scum like you will always get be the victim of karmic balance");
-                System.exit(0);
-            }
+            lost(win);
             scanner = new Scanner(System.in);
             TimeUnit.SECONDS.sleep(1);
             System.out.println("Do you finish him off?" + "\n [1] for yes, [2] for no");
@@ -120,10 +116,8 @@ public class Main {
                 fightnumber += 1;
                 TimeUnit.SECONDS.sleep(1);
                 System.out.println("You tried to steal the item, only for the shopkeeper to catch you, and engage in battle.");
-                boolean battle = battle(35, 30, 50, 70, 60);
-                if (battle==false){
-                    System.exit(0);
-                }
+                win = battle(35, 30, 50, 70, 60);
+                lost(win);
                 TimeUnit.SECONDS.sleep(1);
                 System.out.println("[1] Finish him or [2] spare him?");
                 shop = new Scanner (System.in);
@@ -172,10 +166,8 @@ public class Main {
             TimeUnit.SECONDS.sleep(1);
             System.out.println("A guard challenges you to a battle");
             fightnumber+=1;
-            boolean guard = battle(15,30,10,100,80);
-            if (guard==false){
-                System.exit(0);
-            }
+            win = battle(15,30,10,100,80);
+            lost(win);
             if (karma == 3){
                 TimeUnit.SECONDS.sleep(1);
                 System.out.println("You killed him without a second though. Your stats barely went up");
@@ -329,7 +321,7 @@ public class Main {
                 System.out.println("And when you look at yourself again, you are a creature of the void, " +
                         "\nskin the color of the abyss.");
                 TimeUnit.SECONDS.sleep(1);
-                System.out.println("Your no longer"+pname+"You are a mindless monster.");
+                System.out.println("Your no longer"+playername+"You are a mindless monster.");
                 System.exit(0);
             }
             else{
@@ -435,7 +427,11 @@ public class Main {
         }
 
     }
-
+    public static void lost(boolean a){
+        if (a==false){
+            System.exit(0);
+        }
+    }
     public static void weapontype(int weapon) {
         if (weapon == 1) {
             wd = wd + 30;
@@ -596,12 +592,8 @@ public class Main {
             int formula = (int) Math.round(defense);
              damage = (oat + owd)- formula;
         }
-        Random random = new Random();
-        int crit = random.nextInt(12) + 1;
-        if (crit == 12) {
-            damage *= 1.5;
-            System.out.println("That was a critical hit.");
-        }
+        double random = random();
+        damage *= random;
         return damage;
     }
 
@@ -650,8 +642,16 @@ public class Main {
         sp = ogsp;
         hp = maxhp;
         def = ogdef;
-
-
+    }
+    public static double random (){
+        Random random = new Random ();
+        int crit = random.nextInt(12) + 1;
+        if (crit==12){
+            return 1.5;
+        }
+        else{
+            return 1.0;
+        }
     }
     public static void ending(){
         int score = gold/2;
@@ -659,7 +659,7 @@ public class Main {
             score +=5;
         }
         score += karma*2*10;
-        System.out.println("Thank you for playing the game");
+        System.out.println("Thank you for playing the game"+);
         System.out.println("This is your score: "+score);
         System.exit(0);
     }
